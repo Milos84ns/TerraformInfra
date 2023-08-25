@@ -8,7 +8,6 @@ locals {
     ip_address = "52.80.0.66"
 }
 
-
 module "test_lxc" {
     source = "../../modules/proxmox-lxc-rockylinux"
     os_template = local.lxc_template
@@ -28,7 +27,6 @@ module "test_lxc" {
 
 resource "null_resource" "test"{
     depends_on = [module.test_lxc]
-
     connection {
         type     = "ssh"
         user     = "root"
@@ -39,9 +37,9 @@ resource "null_resource" "test"{
     provisioner "remote-exec" {
         inline = [
             "cd /tmp",
-            "echo 'testing lxc Module'",
-            "nomad -version",
-            "vault -version"
+            "echo 'Testing LXC'",
+            "echo 'Removing Container in 5s'",
+            "sleep 10"
         ]
     }
 }
