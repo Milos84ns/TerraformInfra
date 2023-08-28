@@ -8,13 +8,30 @@ provider "proxmox" {
   # Is there tls security
   pm_tls_insecure = true
 }
+# Create CA and certificates for
+resource "random_id" "consul_encrypt" {
+  byte_length = 32
+}
 
 resource "tls_self_signed_cert" "ca" {
-  allowed_uses          = []
+
+
   key_algorithm         = ""
   private_key_pem       = ""
-  validity_period_hours = 0
-  subject {}
+  validity_period_hours = "8760"
+  subject {
+    common_name = var.common_name
+    organization = var.organization_name
+
+  }
+
+  allowed_uses = [
+    "cert_signing",
+    "key_encipherment",
+    "digital signature",
+    "server_auth",
+    "client_auth"
+  ]
 }
 
 resource "proxmox_lxc" "basic" {

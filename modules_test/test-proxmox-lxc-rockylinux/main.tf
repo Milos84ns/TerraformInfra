@@ -27,6 +27,7 @@ module "test_lxc" {
 
 resource "null_resource" "test"{
     depends_on = [module.test_lxc]
+
     connection {
         type     = "ssh"
         user     = "root"

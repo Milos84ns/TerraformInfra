@@ -9,14 +9,6 @@ provider "proxmox" {
   pm_tls_insecure = true
 }
 
-resource "tls_self_signed_cert" "ca" {
-  allowed_uses          = []
-  key_algorithm         = ""
-  private_key_pem       = ""
-  validity_period_hours = 0
-  subject {}
-}
-
 resource "proxmox_lxc" "basic" {
   target_node  = "pve"
   hostname     = "${var.hostname}"
@@ -32,19 +24,31 @@ resource "proxmox_lxc" "basic" {
   // Terraform will crash without rootfs defined
   rootfs {
     storage = "local-zfs"
-    size    = var.storage_size
+    size    = "8G"
   }
 
   network {
     name   = "eth0"
     bridge = "vmbr0"
-    ip     = "${var.ip_address}/24"
+    ip     = var.isServer == true ? "${var.server_ip_address}/24" : "${var.client_ip_address}/24"
   }
 
   connection {
     type     = "ssh"
     user     = "root"
     password = var.lxc_password_var
-    host     = var.ip_address
+    host     = var.isServer == true ? var.server_ip_address : var.client_ip_address
+  }
+
+  provisioner "file" {
+    source      = var.isServer == true ? "install-nomad-server.sh"  : "install-nomad-client.sh"
+    destination = "/tmp/install-nomad.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "cd /tmp",
+      "sh install-nomad.sh ${var.server_ip_address} NomadClient"
+    ]
   }
 }

@@ -18,7 +18,7 @@ cd /tmp
 cp .profile ~/.bash_profile
 cp .profile /home/"$APP_USER"/.bash_profile
 
-. ~/.bash_profile # reload variables
+. ~/.bash_profile # reload variables.tf
 
 env
 

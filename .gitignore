@@ -47,3 +47,5 @@ terraform.tfstate
 .terraform.lock.hcl
 .terraform/
 .terraform
+
+env.sh
