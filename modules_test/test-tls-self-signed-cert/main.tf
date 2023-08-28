@@ -1,7 +1,5 @@
 module "root_tls_self_signed_ca"{
-
   source = "../../modules/tls-self-signed-cert"
-
   name = "${var.name}-root"
   ca_cert_override = var.common_name
   organization_name = var.organization_name
@@ -13,7 +11,6 @@ module "root_tls_self_signed_ca"{
 }
 
 module "leaf_tls_self_sigend_cert"{
-
   source = "../../modules/tls-self-signed-cert"
 
   name = "${var.name}-leaf"

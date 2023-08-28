@@ -68,13 +68,13 @@ output "leaf_cert_filename" {
 }
 
 #output "leaf_cert_pem" {
-#  value = "${chomp(element(concat(tls_locally_signed_cert.leaf.*.cert_pem, tolist([""])), 0))}" # TODO: Workaround for issue #11210
+#  value = chomp(element(concat(tls_locally_signed_cert.leaf.*.cert_pem, tolist([""])), 0)) # TODO: Workaround for issue #11210
 #}
 #
 #output "leaf_cert_validity_start_time" {
-#  value = "${element(concat(tls_locally_signed_cert.leaf.*.validity_start_time, tolist([""])), 0)}" # TODO: Workaround for issue #11210
+#  value = element(concat(tls_locally_signed_cert.leaf.*.validity_start_time, tolist([""])), 0) # TODO: Workaround for issue #11210
 #}
 #
 #output "leaf_cert_validity_end_time" {
-#  value = "${element(concat(tls_locally_signed_cert.leaf.*.validity_end_time, tolist([""])), 0)}" # TODO: Workaround for issue #11210
+#  value = element(concat(tls_locally_signed_cert.leaf.*.validity_end_time, tolist([""])), 0) # TODO: Workaround for issue #11210
 #}
