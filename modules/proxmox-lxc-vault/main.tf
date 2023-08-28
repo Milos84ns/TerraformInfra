@@ -8,30 +8,13 @@ provider "proxmox" {
   # Is there tls security
   pm_tls_insecure = true
 }
-# Create CA and certificates for
-resource "random_id" "consul_encrypt" {
-  byte_length = 32
-}
 
-resource "tls_self_signed_cert" "ca" {
-
-
-  key_algorithm         = ""
-  private_key_pem       = ""
-  validity_period_hours = "8760"
-  subject {
-    common_name = var.common_name
-    organization = var.organization_name
-
-  }
-
-  allowed_uses = [
-    "cert_signing",
-    "key_encipherment",
-    "digital signature",
-    "server_auth",
-    "client_auth"
-  ]
+module "cert_infra" {
+  source = "../../modules/tls-ca-infrastructure"
+  ca_public_key_file_path = var.ca_public_cert
+  public_key_file_path = var.vault_public_cert
+  private_key_file_path = var.vault_key_cert
+  owner = "vault"
 }
 
 resource "proxmox_lxc" "basic" {
@@ -64,4 +47,36 @@ resource "proxmox_lxc" "basic" {
     password = var.lxc_password_var
     host     = var.ip_address
   }
+
+  provisioner "file" {
+    source      = "install-vault.sh"
+    destination = "/tmp/install-vault.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -p /etc/tls",
+      "touch  ${var.ca_public_cert}",
+      "touch  ${var.vault_key_cert}",
+      "touch  ${var.vault_public_cert}",
+      "echo '${module.cert_infra.ca_cert_pem}' > '${module.cert_infra.ca_public_key_file_path}'",
+      "chmod ${module.cert_infra.permissions} '${module.cert_infra.ca_public_key_file_path}'",
+      "chown ${module.cert_infra.owner} '${module.cert_infra.ca_public_key_file_path}'",
+      "echo 'Setup Vault Public cert'",
+      "echo '${module.cert_infra.cert_public_key}' > '${var.vault_public_cert}'",
+      "chmod ${module.cert_infra.permissions} '${var.vault_public_cert}'",
+      "chown ${module.cert_infra.owner} '${var.vault_public_cert}'",
+      "echo 'Setup Vault private key'",
+      "echo '${module.cert_infra.cert_private_key}' > '${var.vault_key_cert}'",
+      "chmod ${module.cert_infra.permissions} '${var.vault_key_cert}'",
+      "chown ${module.cert_infra.owner} '${var.vault_key_cert}'",
+      "echo 'Done Cert setup'",
+      "cd /tmp",
+      "sh install-vault.sh"
+
+    ]
+  }
+
+
+
 }
