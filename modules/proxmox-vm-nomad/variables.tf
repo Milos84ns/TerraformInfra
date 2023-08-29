@@ -20,6 +20,11 @@ variable "ip_address" {
   default = "192.168.0.100"
 }
 
+variable "server_ip_address" {
+  type = string
+  default = "192.168.0.100"
+}
+
 variable "gateway_ip_address" {
   type = string
   default = "192.168.0.1"
@@ -31,8 +36,8 @@ variable "vmid_start" {
 }
 variable "isServer" {
   type = bool
+  default = false
 }
-
 
 variable "server_ip_last_octet" {
   type = number

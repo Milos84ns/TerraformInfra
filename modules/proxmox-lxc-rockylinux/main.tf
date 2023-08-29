@@ -9,14 +9,6 @@ provider "proxmox" {
   pm_tls_insecure = true
 }
 
-resource "tls_self_signed_cert" "ca" {
-  allowed_uses          = []
-  key_algorithm         = ""
-  private_key_pem       = ""
-  validity_period_hours = 0
-  subject {}
-}
-
 resource "proxmox_lxc" "basic" {
   target_node  = "pve"
   hostname     = "${var.hostname}"

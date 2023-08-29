@@ -21,6 +21,7 @@ resource "tls_self_signed_cert" "ca" {
   subject {
     common_name = var.ca_common_name
     organization = var.organization_name
+    organizational_unit = var.organization_name
   }
 
   #Store the CA public key in a file
@@ -53,6 +54,7 @@ resource "tls_cert_request" "cert" {
   subject {
     common_name = var.common_name
     organization = var.organization_name
+    organizational_unit = var.organization_name
 
   }
 }

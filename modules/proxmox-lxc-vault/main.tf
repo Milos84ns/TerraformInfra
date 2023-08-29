@@ -73,7 +73,6 @@ resource "proxmox_lxc" "basic" {
       "echo 'Done Cert setup'",
       "cd /tmp",
       "sh install-vault.sh"
-
     ]
   }
 

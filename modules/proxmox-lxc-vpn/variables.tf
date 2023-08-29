@@ -19,18 +19,15 @@ variable "hostname" {
 variable "os_template" {
   type = string
 }
-#variable "server_ip_prefix" {
-#  type = string
-#}
 variable "cpu_limit" {
   type = number
 }
-
-variable "disk_size" {
-  default = "8G"
-}
 variable "memory_limit" {
   type = number
+}
+variable "storage_size" {
+  type = string
+  default = "8G"
 }
 variable "vmid" {
   type = number
@@ -39,14 +36,8 @@ variable "isServer" {
   type = bool
 }
 
-variable "client_ip_address" {
+variable "ip_address" {
   type = string
   default = "192.168.0.100"
 }
-
-variable "server_ip_address" {
-  type = string
-  default = "192.168.0.1"
-}
-
 

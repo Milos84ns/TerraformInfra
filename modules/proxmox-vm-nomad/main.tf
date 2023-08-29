@@ -7,7 +7,6 @@ terraform {
   }
 }
 
-
 provider "proxmox" {
   # URL of proxmox API
   pm_api_url = var.proxmox_api_url
@@ -69,13 +68,13 @@ resource "proxmox_vm_qemu" "test_nomad_client" {
   EOF
 
   provisioner "file" {
-    source      = var.isServer == true ? "install-nomad-server.sh"  : "install-nomad-client.sh"
-    destination = "/tmp/install-nomad.sh"
+    source      = "install-nomad-client.sh"
+    destination = "/tmp/install-nomad.sh ${var.server_ip_address} NomadVmClient "
 
 
     connection {
       type     = "ssh"
-      user     = "root"
+      user     = "localadmin"
       password = "Packer"
       host     = var.ip_address
     }
@@ -83,14 +82,14 @@ resource "proxmox_vm_qemu" "test_nomad_client" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'Execute bootstrap'",
+      "echo 'Execute installation'",
       "cd /tmp",
-      "sh install-nomad.sh"
+      "sh install-nomad.sh "
     ]
 
     connection {
       type     = "ssh"
-      user     = "cloud-user"
+      user     = "localadmin"
       password = "Packer"
       host     = var.ip_address
     }
