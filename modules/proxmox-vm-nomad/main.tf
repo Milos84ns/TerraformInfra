@@ -74,7 +74,7 @@ resource "proxmox_vm_qemu" "test_nomad_client" {
 
     connection {
       type     = "ssh"
-      user     = "localadmin"
+      user     = "root"
       password = "Packer"
       host     = var.ip_address
     }

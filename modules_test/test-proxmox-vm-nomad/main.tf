@@ -4,7 +4,7 @@ locals {
   api_token = var.proxmox_api_token #ENV TF_VAR_proxmox_token=
   server_ip = "${var.cluster_ip_prefix}.${var.server_ip_last_octet}"
   client_ip = "${var.cluster_ip_prefix}.${var.client_ip_last_octet}"
-  vm_template = "230827124613-Nomad-RockyLinux9"
+  vm_template = "230901045755-Nomad-RockyLinux9"
 }
 
 module "nomad_vm_client" {
@@ -18,4 +18,21 @@ module "nomad_vm_client" {
     proxmox_api_user  = local.api_user
     server_ip_address = local.server_ip
     ip_address = "${var.cluster_ip_prefix}.${var.client_ip_last_octet+10}"
+}
+
+resource "null_resource" "null" {
+
+  provisioner "file" {
+    source      = "install-nomad-client.sh"
+    destination = "/tmp/install-nomad.sh ${var.cluster_ip_prefix}.${var.client_ip_last_octet+10} NomadVmClient "
+
+
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = "Packer"
+      host     = "${var.cluster_ip_prefix}.${var.client_ip_last_octet+10}"
+    }
+  }
+
 }
