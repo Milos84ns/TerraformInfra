@@ -28,8 +28,9 @@ variable "proxmox_api_token" {
 variable "proxmox_api_url" {
   type = string
 }
-variable "lxc_template" {
-  type = string
+
+variable "lxc_hashi_template" {
+  default = ""
 }
 
 

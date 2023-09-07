@@ -4,5 +4,5 @@
 
 bash remove.sh
 terraform init
-terraform plan  #-var-file="vars.tfvars"
+terraform plan
 terraform apply -auto-approve -var-file="vars.tfvars"

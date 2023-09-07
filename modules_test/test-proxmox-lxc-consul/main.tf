@@ -7,21 +7,20 @@ locals {
     client_nodes = [ "NodeClient01","NodeClient02","NodeClient03"]
 }
 
-variable "ClientNodes" {
-    type    = list(string)
-    default = ["NodeClient001", "NodeClient002", "NodeClient003"]
+module "common" {
+    source = "../../common"
 }
 
-module "nomad_server" {
-    source = "../../modules/proxmox-lxc-nomad"
-    os_template = local.lxc_template
+module "consul_server" {
+    source = "../../modules/proxmox-lxc-consul"
+    os_template = module.common.lxc_hashi_template
     cpu_limit = 2
     memory_limit = 1024
-    server_ip_address = local.server_ip
-    client_ip_address = local.client_ip
+    server_ip_address = module.common.consul_server_test.ip
+    client_ip_address = module.common.consul_client_test.ip
     vmid = var.vmid_start
     isServer = true
-    hostname = "NomadServer"
+    hostname = "ConsulServer"
     lxc_password_var = "rockylinux"
     #define proxmox vars in ENVIRONMENT
     proxmox_api_url = local.api_url
@@ -29,21 +28,21 @@ module "nomad_server" {
     proxmox_api_token = local.api_token
 }
 
-module "nomad_client01" {
-
-    hostname = "NomadClient"
-    source = "../../modules/proxmox-lxc-nomad"
-    os_template = local.lxc_template
+module "consul_client" {
+    source = "../../modules/proxmox-lxc-consul"
+    os_template = module.common.lxc_hashi_template
     cpu_limit = 2
     memory_limit = 1024
-    server_ip_address = local.server_ip
-    client_ip_address = "${var.cluster_ip_prefix}.${var.client_ip_last_octet}"
-    vmid = var.vmid_start + 10
+    server_ip_address = module.common.consul_server_test.ip
+    client_ip_address = module.common.consul_client_test.ip
+    vmid = 1110
     isServer = false
+    hostname = "ConsulClient"
     lxc_password_var = "rockylinux"
     #define proxmox vars in ENVIRONMENT
     proxmox_api_url = local.api_url
     proxmox_api_user = local.api_user
     proxmox_api_token = local.api_token
 }
+
 
