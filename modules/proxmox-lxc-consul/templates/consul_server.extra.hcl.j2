@@ -1,0 +1,52 @@
+client_addr = "127.0.0.1 $"
+serf_lan = "{{ private_ip_address }}"
+advertise_addr = "{{ private_ip_address }}"
+
+{%if groups[host_group_name] | map('extract',hostvars,['ansible'~private_network_interface,'ipv4','address']) | difference([private_ip_address]) | length > 0 %}
+retry_join =  ["{{ groups[host_group_name] | map('extract',hostvars,['ansible'~private_network_interface,'ipv4','address']) | difference([private_ip_address]) | join('","') }}"}]
+{% else %}
+retry_join =[]
+{% endif % }
+bootstrap_expect = {{ groups[host_group_name] length }}
+
+ports {
+ http = -1,
+ https = 8051
+}
+
+log_file = "{{ cluster_log_path }}/consul"
+log_rotate_max_files = 30
+log_rotate_duration = "24h"
+enable_agent_tls_for_checks = true
+
+encrypt = "{{ consul_encrypt_key }}"
+
+verify_incoming = true
+verify_outgoing = true
+verify_server_hostname = true
+ca_file = "{{ cluster_cert_path }}/root-ca/root-ca.pem"
+cert_file = "{{ cluster_cert_path }}/server.dc1.consul/server.dc1.consul-chain.pem"
+key_file = "{{ cluster_cert_path }}/server.dc1.consul/server.dc1.consul-key.pem"
+
+aut_encrypt {
+  allow_tls = true
+}
+
+acl {
+  enabled = true
+  default_policy = "deny"
+  enable_token_persistance = true
+}
+
+limits {
+   http_max_conns_per_client = 20000
+}
+
+telemetry {
+ disable_compat_1.9 = true
+ prometheus_retention_time = "24h"
+ disable_hostname = true
+}
+
+
+

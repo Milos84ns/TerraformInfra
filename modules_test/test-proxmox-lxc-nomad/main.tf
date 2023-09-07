@@ -5,6 +5,7 @@ locals {
     server_ip = "${var.cluster_ip_prefix}.${var.server_ip_last_octet}"
     client_ip = "${var.cluster_ip_prefix}.${var.client_ip_last_octet}"
     lxc_template = "230827134035-HashiPack-rockylinux-8-amd64.tar.gz"
+    client_nodes = [ "NodeClient01","NodeClient02","NodeClient03"]
 }
 
 variable "ClientNodes" {
