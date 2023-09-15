@@ -12,6 +12,7 @@ variable "lxc_password_var" {
   type = string
 }
 
+
 ### LXC VARS ###
 variable "hostname" {
   type = string
@@ -23,14 +24,14 @@ variable "os_template" {
 #  type = string
 #}
 variable "cpu_limit" {
-  type = number
+  default = 1
 }
 
 variable "disk_size" {
   default = "8G"
 }
 variable "memory_limit" {
-  type = number
+  default = 512
 }
 variable "vmid" {
   type = number

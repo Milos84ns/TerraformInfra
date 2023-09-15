@@ -81,3 +81,5 @@ service vault start
 sudo firewall-cmd --add-port=8200/tcp --permanent
 sudo firewall-cmd --add-port=8201/tcp --permanent
 firewall-cmd --reload
+
+######################################## PART 3 VAULT INIT #############################################################

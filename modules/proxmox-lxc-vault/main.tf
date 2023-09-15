@@ -49,7 +49,7 @@ resource "proxmox_lxc" "basic" {
   }
 
   provisioner "file" {
-    source      = "install-vault.sh"
+    source      = "../../provisioning_scripts/hashicorp/vault/install-vault.sh"
     destination = "/tmp/install-vault.sh"
   }
 

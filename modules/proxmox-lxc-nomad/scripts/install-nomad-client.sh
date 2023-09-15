@@ -11,6 +11,8 @@ directory_setup() {
 
 directory_setup nomad nomad
 
+
+
 #!! Client needs to run as root !!#
 cat <<EOF > /opt/nomad/client.hcl
  # Increase log verbosity

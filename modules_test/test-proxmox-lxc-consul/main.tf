@@ -14,8 +14,6 @@ module "common" {
 module "consul_server" {
     source = "../../modules/proxmox-lxc-consul"
     os_template = module.common.lxc_hashi_template
-    cpu_limit = 2
-    memory_limit = 1024
     server_ip_address = module.common.consul_server_test.ip
     client_ip_address = module.common.consul_client_test.ip
     vmid = var.vmid_start
@@ -31,8 +29,6 @@ module "consul_server" {
 module "consul_client" {
     source = "../../modules/proxmox-lxc-consul"
     os_template = module.common.lxc_hashi_template
-    cpu_limit = 2
-    memory_limit = 1024
     server_ip_address = module.common.consul_server_test.ip
     client_ip_address = module.common.consul_client_test.ip
     vmid = 1110

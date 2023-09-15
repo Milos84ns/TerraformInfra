@@ -6,6 +6,10 @@ locals {
     client_ip = "${var.cluster_ip_prefix}.${var.client_ip_last_octet}"
     client_nodes = [ "NodeClient01","NodeClient02","NodeClient03"]
 }
+module "common" {
+    source = "../../common"
+}
+
 
 variable "ClientNodes" {
     type    = list(string)
@@ -14,7 +18,7 @@ variable "ClientNodes" {
 
 module "nomad_server" {
     source = "../../modules/proxmox-lxc-nomad"
-    os_template = local.lxc_template
+    os_template = module.common.lxc_hashi_template
     cpu_limit = 2
     memory_limit = 1024
     server_ip_address = local.server_ip
@@ -33,7 +37,7 @@ module "nomad_client01" {
 
     hostname = "NomadClient"
     source = "../../modules/proxmox-lxc-nomad"
-    os_template = local.lxc_template
+    os_template = module.common.lxc_hashi_template
     cpu_limit = 2
     memory_limit = 1024
     server_ip_address = local.server_ip

@@ -31,7 +31,7 @@ client {
   network_interface = "eth0"
 
   options {
-          "driver.allowlist" = "exec,java,raw_exec"
+          "driver.allowlist" = "exec,java,raw_exec,docker"
         }
           chroot_env {
           "/bin" = "/bin"
@@ -78,6 +78,9 @@ cat <<-EOF
  WantedBy=multi-user.target
 EOF
 )  | sudo tee /etc/systemd/system/nomad.service
+
+sudo systemctl enable docker
+sudo systemctl start docker
 
 sudo systemctl enable nomad.service
 sudo systemctl start nomad
